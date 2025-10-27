@@ -10,7 +10,13 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky",
-    "commit": "git-cz"
+    "commit": "git add . && git-cz"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": [
+      "pnpm eslint --fix",
+      "pnpm prettier --write"
+    ]
   },
   "config": {
     "commitizen": {
@@ -19,8 +25,10 @@
   },
   "dependencies": {
     "@heroui/react": "^2.8.5",
+    "@prisma/client": "^6.18.0",
     "framer-motion": "^12.23.24",
     "next": "16.0.0",
+    "prisma": "^6.18.0",
     "react": "19.2.0",
     "react-dom": "19.2.0"
   },

@@ -1,5 +1,6 @@
 'use client'
 
+import TextDivider from '@/components/TextDivider'
 import { Button, Input } from '@heroui/react'
 import { useFormik } from 'formik'
 import { Lock, Phone } from 'lucide-react'
@@ -51,6 +52,7 @@ export default function LoginForm() {
       <Button type="submit" color="primary" fullWidth isLoading={formik.isSubmitting}>
         登录
       </Button>
+      <TextDivider text="其他登录方式" className="my-6" />
     </form>
   )
 }

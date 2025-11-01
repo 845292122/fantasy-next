@@ -26,7 +26,7 @@ export function SidebarMenuItem({ menu }: { menu: MenuItem }) {
           <DropdownTrigger>
             <button
               className={`
-                w-full flex items-center justify-center p-2 hover:bg-gray-100
+                w-full flex items-center justify-center p-2 hover:bg-gray-100 cursor-pointer
                 ${hasActiveChild ? 'bg-gray-200' : ''}
               `}
             >

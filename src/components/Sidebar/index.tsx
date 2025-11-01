@@ -20,22 +20,16 @@ const menuItems: MenuItem[] = [
     id: '1',
     label: '首页',
     icon: <Home size={20} />,
-    path: '/dashboard'
+    path: '/home'
   },
   {
     id: '2',
-    label: '用户管理',
+    label: '系统管理',
     icon: <Users size={20} />,
     children: [
-      { id: '2-1', label: '账号列表', icon: <Users size={16} />, path: '/accounts' },
-      { id: '2-2', label: '资料管理', icon: <FileText size={16} />, path: '/profiles' }
+      { id: '2-1', label: '账号管理', icon: <Users size={16} />, path: '/system/account' },
+      { id: '2-2', label: '日志管理', icon: <FileText size={16} />, path: '/system/log' }
     ]
-  },
-  {
-    id: '3',
-    label: '设置',
-    icon: <Settings size={20} />,
-    path: '/settings'
   }
 ]
 

@@ -1,4 +1,4 @@
-type TextDividerProps = {
+interface TextDividerProps {
   text?: React.ReactNode
   className?: string // 外层额外样式
   lineClassName?: string // 线条样式

@@ -56,7 +56,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`h-screen bg-gray-50 text-gray-800 transition-all duration-300 flex flex-col border-r border-gray-200 ${isCollapsed ? 'w-16' : 'w-64'}`}
+      className={`h-screen bg-gray-50 text-gray-800 transition-all duration-300 flex flex-col border-r border-gray-200 ${isCollapsed ? 'w-16' : 'w-56'}`}
     >
       <SidebarHeader />
       <SidebarMenu menus={menuItems} />

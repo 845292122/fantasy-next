@@ -14,7 +14,7 @@ export default function SidebarHeader() {
         <>
           <div className="flex items-center gap-3">
             <Image src="/vercel.svg" alt="Logo" width={32} height={32} />
-            <h1 className="font-bold text-lg">后台管理系统</h1>
+            <h1 className="font-bold text-medium">后台管理系统</h1>
           </div>
           <Button isIconOnly variant="light" size="sm" onPress={toggle} className="text-black">
             <X size={20} />

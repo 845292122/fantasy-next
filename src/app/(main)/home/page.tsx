@@ -1,3 +1,9 @@
+import FormExample from './FormExample'
+
 export default function Home() {
-  return <div>home</div>
+  return (
+    <div>
+      <FormExample />
+    </div>
+  )
 }

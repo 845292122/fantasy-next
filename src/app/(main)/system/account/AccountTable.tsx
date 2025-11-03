@@ -1,21 +1,13 @@
 'use client'
 
+import { AccountWithProfile } from '@/actions/account.actions'
 import DataTable, { ColumnDef } from '@/components/DataTable'
 import { Button, Chip, Selection } from '@heroui/react'
 import { Edit, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 
-interface Account {
-  id: number
-  username: string
-  email: string
-  role: string
-  status: 'active' | 'inactive'
-  createdAt: string
-}
-
 interface AccountTableProps {
-  accounts: Account[]
+  accounts: AccountWithProfile[]
   loading?: boolean
 }
 
@@ -23,7 +15,7 @@ export default function AccountTable({ accounts, loading }: AccountTableProps) {
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]))
 
   // 定义列
-  const columns: ColumnDef<Account>[] = [
+  const columns: ColumnDef<AccountWithProfile>[] = [
     {
       key: 'id',
       label: 'ID',
@@ -65,7 +57,7 @@ export default function AccountTable({ accounts, loading }: AccountTableProps) {
   ]
 
   // 操作列
-  const renderActions = (item: Account) => (
+  const renderActions = (item: AccountWithProfile) => (
     <div className="flex items-center gap-2 justify-center">
       <Button isIconOnly size="sm" variant="light" onPress={() => handleEdit(item)}>
         <Edit size={16} />
@@ -82,11 +74,11 @@ export default function AccountTable({ accounts, loading }: AccountTableProps) {
     </div>
   )
 
-  const handleEdit = (item: Account) => {
+  const handleEdit = (item: AccountWithProfile) => {
     console.log('编辑', item)
   }
 
-  const handleDelete = (item: Account) => {
+  const handleDelete = (item: AccountWithProfile) => {
     console.log('删除', item)
   }
 

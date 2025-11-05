@@ -237,6 +237,7 @@ export default function AccountPage() {
 
       {/* 新增 Modal */}
       <DataFormModal
+        key={isModalOpen ? 'create-modal-open' : 'create-modal-closed'}
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false)
@@ -263,6 +264,7 @@ export default function AccountPage() {
       {/* 编辑 Modal */}
       {editingAccount && (
         <DataFormModal
+          key={`edit-modal-${editingAccount.id}-${isEditModalOpen}`}
           isOpen={isEditModalOpen}
           onClose={() => {
             setIsEditModalOpen(false)

@@ -138,14 +138,11 @@ export default function AccountPage() {
   const handleSearch = useCallback((keyword: string) => {
     console.log('搜索关键词:', keyword)
     // TODO: 调用后台 API 查询
-    setLoading(true)
     setTimeout(() => {
       // 模拟搜索
       const filtered = mockAccounts.filter(
         account => account.username.includes(keyword) || account.email.includes(keyword)
       )
-      setAccounts(filtered)
-      setLoading(false)
     }, 500)
   }, [])
 
@@ -170,7 +167,7 @@ export default function AccountPage() {
     const result = await createAccount(input)
     if (result.success) {
       mutate() // 刷新列表
-      setIsModalOpen(false)
+      // Modal 会自动关闭，不需要手动 setIsModalOpen(false)
     }
   }
 

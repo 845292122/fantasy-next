@@ -105,7 +105,13 @@ export default function DataFormModal({
             name={name}
             label={label}
             placeholder={placeholder}
-            selectedKeys={formik.values[name] ? [String(formik.values[name])] : []}
+            selectedKeys={
+              formik.values[name] !== undefined &&
+              formik.values[name] !== null &&
+              formik.values[name] !== ''
+                ? [String(formik.values[name])]
+                : []
+            }
             onSelectionChange={keys => {
               const value = Array.from(keys)[0]
               formik.setFieldValue(name, value)

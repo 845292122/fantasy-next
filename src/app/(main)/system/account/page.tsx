@@ -1,7 +1,7 @@
 'use client'
 
 import PageContainer from '@/components/PageContainer'
-import { Button } from '@heroui/react'
+import { addToast, Button, Toast } from '@heroui/react'
 import { Plus } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import AccountTable from './AccountTable'
@@ -9,7 +9,13 @@ import SearchInput from '@/components/SearchInput'
 import DataFormModal from '@/components/DataForm/DataFormModal'
 import { FormField } from '@/components/DataForm'
 import * as Yup from 'yup'
-import { createAccount, CreateAccountInput } from '@/actions/account.actions'
+import {
+  createAccount,
+  updateAccount,
+  CreateAccountInput,
+  UpdateAccountInput,
+  AccountWithProfile
+} from '@/actions/account.actions'
 import { useAccounts } from '@/hooks/swr/useAccounts'
 
 // 模拟数据
@@ -52,6 +58,8 @@ const validationSchema = Yup.object({
 
 export default function AccountPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [editingAccount, setEditingAccount] = useState<AccountWithProfile | null>(null)
   const [keyword, setKeyword] = useState('')
   const [page, setPage] = useState(1)
 
@@ -152,8 +160,8 @@ export default function AccountPage() {
       // Account 字段
       phone: values.phone,
       passwordHash: values.passwordHash,
-      role: values.role,
-      status: values.status || 1,
+      role: Number(values.role),
+      status: Number(values.status || 1),
 
       // Profile 字段
       contact: values.contact,
@@ -167,11 +175,48 @@ export default function AccountPage() {
     const result = await createAccount(input)
     if (result.success) {
       mutate() // 刷新列表
-      // Modal 会自动关闭，不需要手动 setIsModalOpen(false)
+      addToast({ color: 'success', title: '创建成功' })
     }
   }
 
-  const handleAdd = () => {}
+  // 打开编辑弹窗
+  const handleEdit = (account: AccountWithProfile) => {
+    console.log(account)
+    setEditingAccount(account)
+    setIsEditModalOpen(true)
+  }
+
+  // 更新账户
+  const handleUpdate = async (values: any) => {
+    if (!editingAccount) return
+
+    const input: UpdateAccountInput = {
+      id: editingAccount.id,
+      // Account 字段
+      phone: values.phone,
+      role: Number(values.role),
+      status: Number(values.status),
+
+      // Profile 字段
+      contact: values.contact,
+      shopName: values.shopName,
+      email: values.email,
+      address: values.address,
+      creditCode: values.creditCode,
+      remark: values.remark
+    }
+
+    const result = await updateAccount(input)
+    if (result.success) {
+      await mutate() // 刷新列表
+      // 从最新数据中找到更新后的账号
+      const updatedAccount = accounts.find(acc => acc.id === editingAccount.id)
+      if (updatedAccount) {
+        setEditingAccount(updatedAccount)
+      }
+      addToast({ color: 'success', title: '更新成功' })
+    }
+  }
 
   return (
     <PageContainer
@@ -181,20 +226,22 @@ export default function AccountPage() {
           startContent={<Plus size={16} />}
           onPress={() => setIsModalOpen(true)}
         >
-          新增账号
+          新增账户
         </Button>
       }
     >
       <div className="mb-3 mt-2">
         <SearchInput onSearch={handleSearch} />
       </div>
-      <AccountTable accounts={accounts} loading={isLoading} />
+      <AccountTable accounts={accounts} loading={isLoading} onEdit={handleEdit} />
+
+      {/* 新增 Modal */}
       <DataFormModal
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false)
         }}
-        title="编辑账户"
+        title="新增账户"
         size="2xl"
         fields={formFields}
         initialValues={{
@@ -212,6 +259,33 @@ export default function AccountPage() {
         validationSchema={validationSchema}
         onSubmit={handleCreate}
       />
+
+      {/* 编辑 Modal */}
+      {editingAccount && (
+        <DataFormModal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false)
+            setEditingAccount(null)
+          }}
+          title="编辑账户"
+          size="2xl"
+          fields={formFields.filter(f => f.name !== 'passwordHash')} // 编辑时不显示密码字段
+          initialValues={{
+            phone: editingAccount.phone || '',
+            role: editingAccount.role || 2,
+            status: editingAccount.status ?? 1,
+            contact: editingAccount.Profile?.contact || '',
+            shopName: editingAccount.Profile?.shopName || '',
+            email: editingAccount.Profile?.email || '',
+            address: editingAccount.Profile?.address || '',
+            creditCode: editingAccount.Profile?.creditCode || '',
+            remark: editingAccount.Profile?.remark || ''
+          }}
+          validationSchema={validationSchema.omit(['passwordHash'])} // 移除密码验证
+          onSubmit={handleUpdate}
+        />
+      )}
     </PageContainer>
   )
 }

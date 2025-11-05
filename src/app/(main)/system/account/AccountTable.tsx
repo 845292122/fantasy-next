@@ -9,9 +9,11 @@ import { useState } from 'react'
 interface AccountTableProps {
   accounts: AccountWithProfile[]
   loading?: boolean
+  onEdit?: (account: AccountWithProfile) => void
+  onDelete?: (account: AccountWithProfile) => void
 }
 
-export default function AccountTable({ accounts, loading }: AccountTableProps) {
+export default function AccountTable({ accounts, loading, onEdit, onDelete }: AccountTableProps) {
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]))
 
   // 定义列
@@ -43,11 +45,14 @@ export default function AccountTable({ accounts, loading }: AccountTableProps) {
       key: 'status',
       label: '状态',
       align: 'center',
-      render: item => (
-        <Chip size="sm" color={item.status === 'active' ? 'success' : 'default'} variant="flat">
-          {item.status === 'active' ? '正常' : '禁用'}
-        </Chip>
-      )
+      render: item => {
+        const isActive = Number(item.status) === 1
+        return (
+          <Chip size="sm" color={isActive ? 'success' : 'default'} variant="flat">
+            {isActive ? '正常' : '禁用'}
+          </Chip>
+        )
+      }
     },
     {
       key: 'createdAt',
@@ -75,11 +80,11 @@ export default function AccountTable({ accounts, loading }: AccountTableProps) {
   )
 
   const handleEdit = (item: AccountWithProfile) => {
-    console.log('编辑', item)
+    onEdit?.(item)
   }
 
   const handleDelete = (item: AccountWithProfile) => {
-    console.log('删除', item)
+    onDelete?.(item)
   }
 
   const handleSelectionChange = (keys: Selection) => {

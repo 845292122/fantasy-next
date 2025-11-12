@@ -1,7 +1,7 @@
 'use client'
 
 import PageContainer from '@/components/PageContainer'
-import { addToast, Button, Toast } from '@heroui/react'
+import { addToast, Button } from '@heroui/react'
 import { Plus } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import AccountTable from './AccountTable'
@@ -17,6 +17,7 @@ import {
   AccountWithProfile
 } from '@/actions/account.actions'
 import { useAccounts } from '@/hooks/swr/useAccounts'
+import { BooleanUtils } from '@/utils'
 
 // 模拟数据
 const mockAccounts = [
@@ -70,6 +71,12 @@ export default function AccountPage() {
   const formFields: FormField[] = [
     // Account 字段
     {
+      name: 'email',
+      label: '邮箱',
+      type: 'email',
+      placeholder: '请输入邮箱'
+    },
+    {
       name: 'phone',
       label: '手机号',
       type: 'text',
@@ -94,12 +101,12 @@ export default function AccountPage() {
       required: true
     },
     {
-      name: 'status',
+      name: 'isActive',
       label: '状态',
       type: 'select',
       options: [
-        { label: '启用', value: 1 },
-        { label: '禁用', value: 0 }
+        { label: '启用', value: true },
+        { label: '禁用', value: false }
       ]
     },
 
@@ -117,12 +124,6 @@ export default function AccountPage() {
       placeholder: '请输入店铺名称'
     },
     {
-      name: 'email',
-      label: '邮箱',
-      type: 'email',
-      placeholder: '请输入邮箱'
-    },
-    {
       name: 'address',
       label: '地址',
       type: 'text',
@@ -133,6 +134,18 @@ export default function AccountPage() {
       label: '统一社会信用代码',
       type: 'text',
       placeholder: '请输入统一社会信用代码'
+    },
+    {
+      name: 'domain',
+      label: '域名',
+      type: 'text',
+      placeholder: '请输入域名'
+    },
+    {
+      name: 'wechatID',
+      label: '微信ID',
+      type: 'text',
+      placeholder: '请输入微信号'
     },
     {
       name: 'remark',
@@ -158,17 +171,18 @@ export default function AccountPage() {
   const handleCreate = async (values: any) => {
     const input: CreateAccountInput = {
       // Account 字段
+      email: values.email,
       phone: values.phone,
       passwordHash: values.passwordHash,
       role: Number(values.role),
-      status: Number(values.status || 1),
+      isActive: BooleanUtils.toBoolean(values.isActive),
 
       // Profile 字段
       contact: values.contact,
       shopName: values.shopName,
-      email: values.email,
       address: values.address,
       creditCode: values.creditCode,
+      wechatID: values.wechatID,
       remark: values.remark
     }
 
@@ -193,14 +207,14 @@ export default function AccountPage() {
     const input: UpdateAccountInput = {
       id: editingAccount.id,
       // Account 字段
+      email: values.email,
       phone: values.phone,
       role: Number(values.role),
-      status: Number(values.status),
+      isActive: BooleanUtils.toBoolean(values.isActive),
 
       // Profile 字段
       contact: values.contact,
       shopName: values.shopName,
-      email: values.email,
       address: values.address,
       creditCode: values.creditCode,
       remark: values.remark
@@ -249,7 +263,7 @@ export default function AccountPage() {
           phone: '',
           passwordHash: '',
           role: 2,
-          status: 1,
+          isActive: true,
           contact: '',
           shopName: '',
           email: '',
@@ -274,17 +288,17 @@ export default function AccountPage() {
           size="2xl"
           fields={formFields.filter(f => f.name !== 'passwordHash')} // 编辑时不显示密码字段
           initialValues={{
+            email: editingAccount?.email || '',
             phone: editingAccount.phone || '',
             role: editingAccount.role || 2,
-            status: editingAccount.status ?? 1,
+            isActive: BooleanUtils.toBoolean(editingAccount.isActive),
             contact: editingAccount.Profile?.contact || '',
             shopName: editingAccount.Profile?.shopName || '',
-            email: editingAccount.Profile?.email || '',
             address: editingAccount.Profile?.address || '',
             creditCode: editingAccount.Profile?.creditCode || '',
             remark: editingAccount.Profile?.remark || ''
           }}
-          validationSchema={validationSchema.omit(['passwordHash'])} // 移除密码验证
+          validationSchema={validationSchema.omit(['passwordHash'])}
           onSubmit={handleUpdate}
         />
       )}

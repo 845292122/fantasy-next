@@ -12,14 +12,13 @@ type AccountWithProfile = Prisma.AccountGetPayload<{
 // 创建账户的输入类型
 export interface CreateAccountInput {
   // Account 字段
+  email?: string
   phone?: string
   passwordHash?: string
   role?: number
   avatar?: string
-  status?: number
-  isPremium?: number
-  startDate?: Date
-  endDate?: Date
+  isActive?: boolean
+  lastLoginAt?: Date
 
   // Profile 字段（同级）
   contact?: string
@@ -27,8 +26,6 @@ export interface CreateAccountInput {
   creditCode?: string
   address?: string
   domain?: string
-  birthday?: Date
-  email?: string
   wechatID?: string
   remark?: string
 }
@@ -49,11 +46,7 @@ export async function getAccounts(params?: { keyword?: string; page?: number; pa
           { phone: { contains: keyword } },
           {
             Profile: {
-              OR: [
-                { shopName: { contains: keyword } },
-                { contact: { contains: keyword } },
-                { email: { contains: keyword } }
-              ]
+              OR: [{ shopName: { contains: keyword } }, { contact: { contains: keyword } }]
             }
           }
         ]
@@ -96,22 +89,18 @@ export async function getAccount(id: number) {
 export async function createAccount(input: CreateAccountInput) {
   const {
     // Account 字段
+    email,
     phone,
     passwordHash,
     role,
     avatar,
-    status,
-    isPremium,
-    startDate,
-    endDate,
+    isActive,
     // Profile 字段
     contact,
     shopName,
     creditCode,
     address,
     domain,
-    birthday,
-    email,
     wechatID,
     remark
   } = input
@@ -121,14 +110,12 @@ export async function createAccount(input: CreateAccountInput) {
     // 1. 创建 Account
     const account = await tx.account.create({
       data: {
+        email,
         phone,
         passwordHash,
         role,
         avatar,
-        status,
-        isPremium,
-        startDate,
-        endDate,
+        isActive,
         // 嵌套创建 Profile
         Profile: {
           create: {
@@ -137,8 +124,6 @@ export async function createAccount(input: CreateAccountInput) {
             creditCode,
             address,
             domain,
-            birthday,
-            email,
             wechatID,
             remark
           }
@@ -161,22 +146,18 @@ export async function updateAccount(input: UpdateAccountInput) {
   const {
     id,
     // Account 字段
+    email,
     phone,
     passwordHash,
     role,
     avatar,
-    status,
-    isPremium,
-    startDate,
-    endDate,
+    isActive,
     // Profile 字段
     contact,
     shopName,
     creditCode,
     address,
     domain,
-    birthday,
-    email,
     wechatID,
     remark
   } = input
@@ -187,14 +168,12 @@ export async function updateAccount(input: UpdateAccountInput) {
     await tx.account.update({
       where: { id },
       data: {
+        email,
         phone,
         passwordHash,
         role,
         avatar,
-        status,
-        isPremium,
-        startDate,
-        endDate
+        isActive
       }
     })
 
@@ -207,8 +186,6 @@ export async function updateAccount(input: UpdateAccountInput) {
         creditCode,
         address,
         domain,
-        birthday,
-        email,
         wechatID,
         remark
       },
@@ -219,8 +196,6 @@ export async function updateAccount(input: UpdateAccountInput) {
         creditCode,
         address,
         domain,
-        birthday,
-        email,
         wechatID,
         remark
       }
@@ -276,8 +251,8 @@ export async function deleteAccounts(ids: number[]) {
 // * 冻结账户
 export async function freezeAccount(id: number) {
   await prisma.account.update({
-    where: { id },
-    data: { status: 0 }
+    where: { id, isActive: true },
+    data: { isActive: false }
   })
 
   revalidatePath('/system/account')
@@ -287,8 +262,8 @@ export async function freezeAccount(id: number) {
 // * 启用账户
 export async function activateAccount(id: number) {
   await prisma.account.update({
-    where: { id },
-    data: { status: 1 }
+    where: { id, isActive: false },
+    data: { isActive: true }
   })
 
   revalidatePath('/system/account')

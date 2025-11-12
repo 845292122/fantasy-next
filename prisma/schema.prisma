@@ -13,7 +13,6 @@
 // npx prisma generate  重新生成Prisma Client
 // npx prisma db push 同步数据库，不会删除数据
 
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -26,39 +25,34 @@ datasource db {
 
 model Account {
   id           Int       @id @default(autoincrement()) // 主键
+  email        String?   @unique @db.VarChar(100) // 邮箱
   phone        String?   @unique @db.VarChar(20) // 手机号
   passwordHash String?   @db.VarChar(1000) // 密码
   role         Int       @default(2) @db.TinyInt // 角色 1: 管理员 2: 普通用户
   avatar       String?   @db.VarChar(255) //头像
-  status       Int?      @default(0) @db.TinyInt // 1启用 0禁用
-  isPremium    Int?      @default(0) @db.TinyInt //是否Premium, 1: 是; 0: 否
-  startDate    DateTime? @db.DateTime //开始时间
-  endDate      DateTime? @db.DateTime //结束时间
+  isActive     Boolean?  @default(false) @db.TinyInt // 1启用 0禁用
+  lastLoginAt  DateTime? @db.Timestamp() //最后登录日期
   createdAt    DateTime  @default(dbgenerated("NOW()")) @db.Timestamp //创建时间
   updatedAt    DateTime  @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.Timestamp //最后更新时间
   Profile      Profile?
 
-  @@index([phone, role, status, isPremium])
+  @@index([phone, role, isActive])
   @@map("auth_account")
 }
 
 model Profile {
-  id         Int       @id @default(autoincrement()) // 主键
-  contact    String?   @db.VarChar(100) //联系人
-  shopName   String?   @db.VarChar(50) //店铺名称
-  creditCode String?   @db.VarChar(50) //统一社会信用代码
-  address    String?   @db.VarChar(255) //地址
-  domain     String?   @db.VarChar(255) //域名
-  birthday   DateTime? @db.DateTime //生日
-  email      String?   @db.VarChar(50) //邮箱
-  wechatID   String?   @db.VarChar(255) // wechatID
-  loginIP    String?   @db.VarChar(255) //最后登录IP
-  loginDate  DateTime? @db.Timestamp() //最后登录日期
-  remark     String?   @db.VarChar(500) //备注
-  createdAt  DateTime  @default(dbgenerated("NOW()")) @db.Timestamp //创建时间
-  updatedAt  DateTime  @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.Timestamp //最后更新时间
-  account    Account   @relation(fields: [accountId], references: [id])
-  accountId  Int       @unique
+  id         Int      @id @default(autoincrement()) // 主键
+  contact    String?  @db.VarChar(100) //联系人
+  shopName   String?  @db.VarChar(50) //店铺名称
+  creditCode String?  @db.VarChar(50) //统一社会信用代码
+  address    String?  @db.VarChar(255) //地址
+  domain     String?  @db.VarChar(255) //域名
+  wechatID   String?  @db.VarChar(255) // wechatID
+  remark     String?  @db.VarChar(500) //备注
+  createdAt  DateTime @default(dbgenerated("NOW()")) @db.Timestamp //创建时间
+  updatedAt  DateTime @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.Timestamp //最后更新时间
+  account    Account  @relation(fields: [accountId], references: [id])
+  accountId  Int      @unique
 
   @@index([contact, shopName])
   @@map("auth_profile")

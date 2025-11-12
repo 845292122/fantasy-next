@@ -14,7 +14,7 @@ interface AccountTableProps {
 }
 
 export default function AccountTable({ accounts, loading, onEdit, onDelete }: AccountTableProps) {
-  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]))
+  // const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]))
 
   // 定义列
   const columns: ColumnDef<AccountWithProfile>[] = [
@@ -24,9 +24,16 @@ export default function AccountTable({ accounts, loading, onEdit, onDelete }: Ac
       sortable: true
     },
     {
-      key: 'username',
-      label: '用户名',
-      sortable: true
+      key: 'shopName',
+      label: '店铺名称'
+    },
+    {
+      key: 'contact',
+      label: '联系人'
+    },
+    {
+      key: 'phone',
+      label: '手机号'
     },
     {
       key: 'email',
@@ -42,11 +49,11 @@ export default function AccountTable({ accounts, loading, onEdit, onDelete }: Ac
       )
     },
     {
-      key: 'status',
+      key: 'isActive',
       label: '状态',
       align: 'center',
       render: item => {
-        const isActive = Number(item.status) === 1
+        const { isActive } = item
         return (
           <Chip size="sm" color={isActive ? 'success' : 'default'} variant="flat">
             {isActive ? '正常' : '禁用'}
@@ -87,10 +94,10 @@ export default function AccountTable({ accounts, loading, onEdit, onDelete }: Ac
     onDelete?.(item)
   }
 
-  const handleSelectionChange = (keys: Selection) => {
-    setSelectedKeys(keys)
-    console.log('选中的行:', keys)
-  }
+  // const handleSelectionChange = (keys: Selection) => {
+  //   setSelectedKeys(keys)
+  //   console.log('选中的行:', keys)
+  // }
 
   return (
     <DataTable

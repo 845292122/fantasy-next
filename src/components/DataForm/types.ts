@@ -15,7 +15,7 @@ export type FormFieldType =
 
 export interface SelectOption {
   label: string
-  value: string | number
+  value: string | number | boolean
 }
 
 export interface FormField {

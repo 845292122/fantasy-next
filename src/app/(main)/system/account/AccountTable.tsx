@@ -3,7 +3,7 @@
 import DataTable, { ColumnDef } from '@/components/DataTable'
 import { Button, Chip } from '@heroui/react'
 import { Edit, Trash2 } from 'lucide-react'
-import { UpdateAccountInput as AccountWithProfile } from '@/schemas/account.schema'
+import { AccountWithProfile } from '@/schemas/account.schema'
 
 interface AccountTableProps {
   accounts: AccountWithProfile[]

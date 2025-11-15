@@ -195,13 +195,14 @@ export default function DataFormModal({
               <div className="space-y-4">{fields.map(field => renderField(field))}</div>
             </ModalBody>
             <ModalFooter>
-              <Button variant="flat" onPress={onClose} isDisabled={formik.isSubmitting}>
+              <Button variant="flat" onPress={onClose} isDisabled={formik.isSubmitting} size="sm">
                 {cancelText}
               </Button>
               <Button
                 color="primary"
                 onPress={() => formik.handleSubmit()}
                 isLoading={formik.isSubmitting}
+                size="sm"
               >
                 {submitText}
               </Button>

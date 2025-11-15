@@ -30,10 +30,7 @@ export default function SearchInput({
       placeholder={placeholder}
       onChange={handleChange}
       startContent={<Search size={18} className="text-gray-400" />}
-      classNames={{
-        input: 'text-sm',
-        inputWrapper: 'h-10'
-      }}
+      size="sm"
       className="w-64"
     />
   )

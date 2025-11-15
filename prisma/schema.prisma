@@ -14,8 +14,7 @@
 // npx prisma db push 同步数据库，不会删除数据
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {

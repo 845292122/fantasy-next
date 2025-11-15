@@ -8,7 +8,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <div className="sticky top-0 z-10">
         <AppNavbar />
       </div>
-      <main className="flex-1 bg-gray-50">{children}</main>
+      <main className="flex-1 bg-gray-50 px-6 pt-2">{children}</main>
     </div>
   )
 }

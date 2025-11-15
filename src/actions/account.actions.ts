@@ -2,7 +2,6 @@
 
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
-import { Prisma } from '@/generated/prisma/client'
 import {
   CreateAccountInput,
   createAccountSchema,
@@ -10,6 +9,7 @@ import {
   updateAccountSchema
 } from '@/schemas/account.schema'
 import * as yup from 'yup'
+import { Prisma } from '@prisma/client'
 
 // * 获取账户列表
 export async function getAccounts(params?: { keyword?: string; page?: number; pageSize?: number }) {
@@ -117,15 +117,16 @@ export async function createAccount(raw: CreateAccountInput) {
 
     revalidatePath('/system/account')
 
-    return { success: true, data: result }
+    return { ok: true, data: result }
   } catch (err) {
+    let error = err
     if (err instanceof yup.ValidationError) {
-      const errors = err.inner.map(issue => ({
+      error = err.inner.map(issue => ({
         path: issue.path,
         message: issue.message
       }))
-      return { ok: false, errors }
     }
+    return { ok: false, error }
   }
 }
 
@@ -202,15 +203,16 @@ export async function updateAccount(raw: UpdateAccountInput) {
     })
 
     revalidatePath('/system/account')
-    return { success: true, data: result }
+    return { ok: true, data: result }
   } catch (err) {
+    let error = err
     if (err instanceof yup.ValidationError) {
-      const errors = err.inner.map(issue => ({
+      error = err.inner.map(issue => ({
         path: issue.path,
         message: issue.message
       }))
-      return { ok: false, errors }
     }
+    return { ok: false, error }
   }
 }
 

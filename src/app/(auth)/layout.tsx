@@ -3,7 +3,7 @@ import Image from 'next/image'
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex w-full h-screen">
-      <div className="flex-1 bg-[#d3e3fe] flex flex-col p-12 select-none">
+      <div className="flex-1 bg-[#d3e3fe] flex flex-col py-14 pl-12 select-none">
         <header className="flex items-center">
           <Image src="/vercel.svg" alt="logo" width={22} height={22} />
           <h1 className="font-bold text-xl ml-3">后台管理系统</h1>
@@ -18,7 +18,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           © 2025 Your Company. All rights reserved.
         </footer>
       </div>
-      <div className="flex-1 bg-white flex items-center justify-center">{children}</div>
+      <div className="flex-1 bg-white flex items-center justify-center px-14">{children}</div>
     </div>
   )
 }

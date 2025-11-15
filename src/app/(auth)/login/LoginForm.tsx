@@ -1,7 +1,7 @@
 'use client'
 
 import TextDivider from '@/components/TextDivider'
-import { Button, Input } from '@heroui/react'
+import { Button, Input, Link } from '@heroui/react'
 import { useFormik } from 'formik'
 import { Lock, Phone } from 'lucide-react'
 import * as Yup from 'yup'
@@ -26,30 +26,39 @@ export default function LoginForm() {
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-4">
       <Input
-        label="手机号"
+        label={formik.touched.phone && formik.errors.phone ? formik.errors.phone : '手机号'}
         name="phone"
         type="text"
         labelPlacement="outside-top"
         value={formik.values.phone}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        errorMessage={formik.touched.phone && formik.errors.phone}
         isInvalid={!!(formik.touched.phone && formik.errors.phone)}
         startContent={<Phone size={18} />}
       />
       <Input
-        label="密码"
+        label={formik.touched.password && formik.errors.password ? formik.errors.password : '密码'}
         name="password"
         type="password"
         labelPlacement="outside-top"
         value={formik.values.password}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        errorMessage={formik.touched.password && formik.errors.password}
         isInvalid={!!(formik.touched.password && formik.errors.password)}
         startContent={<Lock size={18} />}
       />
-      <Button type="submit" color="primary" fullWidth isLoading={formik.isSubmitting}>
+      <div className="flex justify-end mt-7">
+        <Link color="primary" className="cursor-pointer">
+          忘记密码 ?
+        </Link>
+      </div>
+      <Button
+        type="submit"
+        color="primary"
+        variant="shadow"
+        fullWidth
+        isLoading={formik.isSubmitting}
+      >
         登录
       </Button>
       <TextDivider text="其他登录方式" className="my-6" />

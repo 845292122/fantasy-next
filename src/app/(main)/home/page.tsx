@@ -4,6 +4,21 @@ export default function Home() {
   return (
     <div>
       <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
+      <FormExample />
     </div>
   )
 }

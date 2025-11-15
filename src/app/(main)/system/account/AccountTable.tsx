@@ -1,10 +1,9 @@
 'use client'
 
-import { AccountWithProfile } from '@/actions/account.actions'
 import DataTable, { ColumnDef } from '@/components/DataTable'
-import { Button, Chip, Selection } from '@heroui/react'
+import { Button, Chip } from '@heroui/react'
 import { Edit, Trash2 } from 'lucide-react'
-import { useState } from 'react'
+import { UpdateAccountInput as AccountWithProfile } from '@/schemas/account.schema'
 
 interface AccountTableProps {
   accounts: AccountWithProfile[]

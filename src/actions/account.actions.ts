@@ -3,37 +3,13 @@
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@/generated/prisma/client'
-
-// 使用 Prisma 生成的类型
-type AccountWithProfile = Prisma.AccountGetPayload<{
-  include: { Profile: true }
-}>
-
-// 创建账户的输入类型
-export interface CreateAccountInput {
-  // Account 字段
-  email?: string
-  phone?: string
-  passwordHash?: string
-  role?: number
-  avatar?: string
-  isActive?: boolean
-  lastLoginAt?: Date
-
-  // Profile 字段（同级）
-  contact?: string
-  shopName?: string
-  creditCode?: string
-  address?: string
-  domain?: string
-  wechatID?: string
-  remark?: string
-}
-
-// 更新账户的输入类型
-export interface UpdateAccountInput extends CreateAccountInput {
-  id: number
-}
+import {
+  CreateAccountInput,
+  createAccountSchema,
+  UpdateAccountInput,
+  updateAccountSchema
+} from '@/schemas/account.schema'
+import * as yup from 'yup'
 
 // * 获取账户列表
 export async function getAccounts(params?: { keyword?: string; page?: number; pageSize?: number }) {
@@ -85,30 +61,35 @@ export async function getAccount(id: number) {
   return account
 }
 
-// * 创建账户
-export async function createAccount(input: CreateAccountInput) {
-  const {
-    // Account 字段
-    email,
-    phone,
-    passwordHash,
-    role,
-    avatar,
-    isActive,
-    // Profile 字段
-    contact,
-    shopName,
-    creditCode,
-    address,
-    domain,
-    wechatID,
-    remark
-  } = input
+/**
+ * 创建账户
+ * @param raw
+ */
+export async function createAccount(raw: CreateAccountInput) {
+  try {
+    const data = await createAccountSchema.validate(raw, {
+      abortEarly: false,
+      stripUnknown: true
+    })
 
-  // 使用事务确保原子性
-  const result = await prisma.$transaction(async tx => {
-    // 1. 创建 Account
-    const account = await tx.account.create({
+    const {
+      email,
+      phone,
+      passwordHash,
+      role,
+      avatar,
+      isActive,
+      contact,
+      shopName,
+      creditCode,
+      address,
+      domain,
+      wechatID,
+      remark
+    } = data
+
+    // 使用事务确保原子性
+    const result = await prisma.account.create({
       data: {
         email,
         phone,
@@ -134,85 +115,109 @@ export async function createAccount(input: CreateAccountInput) {
       }
     })
 
-    return account
-  })
+    revalidatePath('/system/account')
 
-  revalidatePath('/system/account')
-  return { success: true, data: result }
+    return { success: true, data: result }
+  } catch (err) {
+    if (err instanceof yup.ValidationError) {
+      const errors = err.inner.map(issue => ({
+        path: issue.path,
+        message: issue.message
+      }))
+      return { ok: false, errors }
+    }
+  }
 }
 
-// * 更新账户
-export async function updateAccount(input: UpdateAccountInput) {
-  const {
-    id,
-    // Account 字段
-    email,
-    phone,
-    passwordHash,
-    role,
-    avatar,
-    isActive,
-    // Profile 字段
-    contact,
-    shopName,
-    creditCode,
-    address,
-    domain,
-    wechatID,
-    remark
-  } = input
-
-  // 使用事务确保原子性
-  const result = await prisma.$transaction(async tx => {
-    // 1. 更新 Account
-    await tx.account.update({
-      where: { id },
-      data: {
-        email,
-        phone,
-        passwordHash,
-        role,
-        avatar,
-        isActive
-      }
+/**
+ * 更新账户
+ * @param raw
+ */
+export async function updateAccount(raw: UpdateAccountInput) {
+  try {
+    const data = await updateAccountSchema.validate(raw, {
+      abortEarly: false,
+      stripUnknown: true
     })
 
-    // 2. 更新或创建 Profile（upsert）
-    await tx.profile.upsert({
-      where: { accountId: id },
-      update: {
-        contact,
-        shopName,
-        creditCode,
-        address,
-        domain,
-        wechatID,
-        remark
-      },
-      create: {
-        accountId: id,
-        contact,
-        shopName,
-        creditCode,
-        address,
-        domain,
-        wechatID,
-        remark
-      }
+    const {
+      id,
+      email,
+      phone,
+      role,
+      avatar,
+      isActive,
+      contact,
+      shopName,
+      creditCode,
+      address,
+      domain,
+      wechatID,
+      remark
+    } = data
+
+    // 使用事务确保原子性
+    const result = await prisma.$transaction(async tx => {
+      // 1. 更新 Account
+      await tx.account.update({
+        where: { id },
+        data: {
+          email,
+          phone,
+          role,
+          avatar,
+          isActive
+        }
+      })
+
+      // 2. 更新或创建 Profile（upsert）
+      await tx.profile.upsert({
+        where: { accountId: id },
+        update: {
+          contact,
+          shopName,
+          creditCode,
+          address,
+          domain,
+          wechatID,
+          remark
+        },
+        create: {
+          accountId: id,
+          contact,
+          shopName,
+          creditCode,
+          address,
+          domain,
+          wechatID,
+          remark
+        }
+      })
+
+      // 3. 返回完整数据
+      return await tx.account.findUnique({
+        where: { id },
+        include: { Profile: true }
+      })
     })
 
-    // 3. 返回完整数据
-    return await tx.account.findUnique({
-      where: { id },
-      include: { Profile: true }
-    })
-  })
-
-  revalidatePath('/system/account')
-  return { success: true, data: result }
+    revalidatePath('/system/account')
+    return { success: true, data: result }
+  } catch (err) {
+    if (err instanceof yup.ValidationError) {
+      const errors = err.inner.map(issue => ({
+        path: issue.path,
+        message: issue.message
+      }))
+      return { ok: false, errors }
+    }
+  }
 }
 
-// * 删除账户
+/**
+ * 删除账户
+ * @param id
+ */
 export async function deleteAccount(id: number) {
   await prisma.$transaction(async tx => {
     // 1. 先删除 Profile（如果存在）
@@ -230,7 +235,10 @@ export async function deleteAccount(id: number) {
   return { success: true }
 }
 
-// * 批量删除账户
+/**
+ * 批量删除账户
+ * @param ids
+ */
 export async function deleteAccounts(ids: number[]) {
   await prisma.$transaction(async tx => {
     // 1. 先删除所有关联的 Profile
@@ -248,27 +256,54 @@ export async function deleteAccounts(ids: number[]) {
   return { success: true }
 }
 
-// * 冻结账户
+/**
+ * 冻结账户
+ * @param id
+ */
 export async function freezeAccount(id: number) {
-  await prisma.account.update({
-    where: { id, isActive: true },
-    data: { isActive: false }
+  await prisma.$transaction(async tx => {
+    // 1. 冻结关联的 Profile
+    await tx.profile.update({
+      where: { accountId: id, isActive: true },
+      data: {
+        isActive: false
+      }
+    })
+
+    // 2. 冻结 Account
+    await tx.account.update({
+      where: { id, isActive: true },
+      data: {
+        isActive: false
+      }
+    })
   })
 
   revalidatePath('/system/account')
   return { success: true }
 }
 
-// * 启用账户
+/**
+ * 启用账户
+ * @param id
+ */
 export async function activateAccount(id: number) {
-  await prisma.account.update({
-    where: { id, isActive: false },
-    data: { isActive: true }
+  await prisma.$transaction(async tx => {
+    await tx.account.update({
+      where: { id, isActive: false },
+      data: {
+        isActive: true
+      }
+    })
+
+    await tx.profile.update({
+      where: { accountId: id, isActive: false },
+      data: {
+        isActive: true
+      }
+    })
   })
 
   revalidatePath('/system/account')
   return { success: true }
 }
-
-// 导出类型供其他地方使用
-export type { AccountWithProfile }

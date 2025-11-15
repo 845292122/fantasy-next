@@ -30,7 +30,7 @@ model Account {
   passwordHash String?   @db.VarChar(1000) // 密码
   role         Int       @default(2) @db.TinyInt // 角色 1: 管理员 2: 普通用户
   avatar       String?   @db.VarChar(255) //头像
-  isActive     Boolean?  @default(false) @db.TinyInt // 1启用 0禁用
+  isActive     Boolean?  @default(true) @db.TinyInt // isActive
   lastLoginAt  DateTime? @db.Timestamp() //最后登录日期
   createdAt    DateTime  @default(dbgenerated("NOW()")) @db.Timestamp //创建时间
   updatedAt    DateTime  @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.Timestamp //最后更新时间
@@ -49,6 +49,7 @@ model Profile {
   domain     String?  @db.VarChar(255) //域名
   wechatID   String?  @db.VarChar(255) // wechatID
   remark     String?  @db.VarChar(500) //备注
+  isActive   Boolean  @default(true) @db.TinyInt // isActive
   createdAt  DateTime @default(dbgenerated("NOW()")) @db.Timestamp //创建时间
   updatedAt  DateTime @default(dbgenerated("NOW() ON UPDATE NOW()")) @db.Timestamp //最后更新时间
   account    Account  @relation(fields: [accountId], references: [id])

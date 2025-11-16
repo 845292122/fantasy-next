@@ -3,7 +3,8 @@
 import DataTable, { ColumnDef } from '@/components/DataTable'
 import { Button, Chip } from '@heroui/react'
 import { Edit, Trash2 } from 'lucide-react'
-import { AccountWithProfile } from '@/schemas/account.schema'
+import { AccountWithProfile } from '@/server/schemas/account.schema'
+import { format } from 'date-fns'
 
 interface AccountTableProps {
   accounts: AccountWithProfile[]
@@ -41,11 +42,26 @@ export default function AccountTable({ accounts, loading, onEdit, onDelete }: Ac
     {
       key: 'role',
       label: '角色',
-      render: item => (
-        <Chip size="sm" variant="flat">
-          {item.role}
-        </Chip>
-      )
+      render: item => {
+        const { role } = item
+        const isAdmin = role === 1
+        return (
+          <Chip
+            size="sm"
+            variant={isAdmin ? 'shadow' : 'flat'}
+            classNames={
+              isAdmin
+                ? {
+                    base: 'bg-linear-to-br from-indigo-500 to-pink-500 border-small border-white/50 shadow-pink-500/30',
+                    content: 'drop-shadow-xs shadow-black text-white'
+                  }
+                : {}
+            }
+          >
+            {isAdmin ? '管理员' : '普通用户'}
+          </Chip>
+        )
+      }
     },
     {
       key: 'isActive',
@@ -54,7 +70,7 @@ export default function AccountTable({ accounts, loading, onEdit, onDelete }: Ac
       render: item => {
         const { isActive } = item
         return (
-          <Chip size="sm" color={isActive ? 'success' : 'default'} variant="flat">
+          <Chip size="sm" color={isActive ? 'success' : 'danger'} variant="flat">
             {isActive ? '正常' : '禁用'}
           </Chip>
         )
@@ -63,7 +79,8 @@ export default function AccountTable({ accounts, loading, onEdit, onDelete }: Ac
     {
       key: 'createdAt',
       label: '创建时间',
-      sortable: true
+      sortable: true,
+      render: item => format(new Date(item.createdAt), 'yyyy-MM-dd HH:mm:ss')
     }
   ]
 

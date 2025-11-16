@@ -7,11 +7,15 @@ import {
   createAccountSchema,
   UpdateAccountInput,
   updateAccountSchema
-} from '@/schemas/account.schema'
+} from '@/server/schemas/account.schema'
 import * as yup from 'yup'
 import { Prisma } from '@prisma/client'
 
-// * 获取账户列表
+/**
+ * 获取账户列表
+ * @param params
+ * @returns
+ */
 export async function getAccounts(params?: { keyword?: string; page?: number; pageSize?: number }) {
   const { keyword = '', page = 1, pageSize = 10 } = params || {}
 
@@ -29,7 +33,7 @@ export async function getAccounts(params?: { keyword?: string; page?: number; pa
       }
     : {}
 
-  const [data, total] = await Promise.all([
+  const [accounts, total] = await Promise.all([
     prisma.account.findMany({
       where,
       include: {
@@ -42,10 +46,34 @@ export async function getAccounts(params?: { keyword?: string; page?: number; pa
     prisma.account.count({ where })
   ])
 
+  // 格式化数据
+  const data = accounts.map(account => ({
+    id: account.id,
+    email: account.email,
+    phone: account.phone,
+    role: account.role,
+    avatar: account.avatar,
+    isActive: account.isActive,
+    createdAt: account.createdAt,
+    updatedAt: account.updatedAt,
+    // 从 Profile 中提取字段
+    shopName: account.Profile?.shopName || '',
+    contact: account.Profile?.contact || '',
+    creditCode: account.Profile?.creditCode || '',
+    address: account.Profile?.address || '',
+    domain: account.Profile?.domain || '',
+    wechatID: account.Profile?.wechatID || '',
+    remark: account.Profile?.remark || ''
+  }))
+
   return { data, total, page, pageSize }
 }
 
-// * 获取单个账户
+/**
+ * 获取单个账户
+ * @param id
+ * @returns
+ */
 export async function getAccount(id: number) {
   const account = await prisma.account.findUnique({
     where: { id },
@@ -58,7 +86,24 @@ export async function getAccount(id: number) {
     throw new Error('账户不存在')
   }
 
-  return account
+  return {
+    id: account.id,
+    email: account.email,
+    phone: account.phone,
+    role: account.role,
+    avatar: account.avatar,
+    isActive: account.isActive,
+    createdAt: account.createdAt,
+    updatedAt: account.updatedAt,
+    // 从 Profile 中提取字段
+    shopName: account.Profile?.shopName || '',
+    contact: account.Profile?.contact || '',
+    creditCode: account.Profile?.creditCode || '',
+    address: account.Profile?.address || '',
+    domain: account.Profile?.domain || '',
+    wechatID: account.Profile?.wechatID || '',
+    remark: account.Profile?.remark || ''
+  }
 }
 
 /**
@@ -175,23 +220,23 @@ export async function updateAccount(raw: UpdateAccountInput) {
       await tx.profile.upsert({
         where: { accountId: id },
         update: {
-          contact,
-          shopName,
-          creditCode,
-          address,
-          domain,
-          wechatID,
-          remark
+          contact: contact || '',
+          shopName: shopName || '',
+          creditCode: creditCode || '',
+          address: address || '',
+          domain: domain || '',
+          wechatID: wechatID || '',
+          remark: remark || ''
         },
         create: {
           accountId: id,
-          contact,
-          shopName,
-          creditCode,
-          address,
-          domain,
-          wechatID,
-          remark
+          contact: contact || '',
+          shopName: shopName || '',
+          creditCode: creditCode || '',
+          address: address || '',
+          domain: domain || '',
+          wechatID: wechatID || '',
+          remark: remark || ''
         }
       })
 

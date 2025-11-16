@@ -1,4 +1,4 @@
-import { getAccount } from '@/actions/account.actions'
+import { getAccount } from '@/server/actions/account.actions'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {

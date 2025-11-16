@@ -8,14 +8,14 @@ import SearchInput from '@/components/SearchInput'
 import DataFormModal from '@/components/DataForm/DataFormModal'
 import { FormField } from '@/components/DataForm'
 import * as Yup from 'yup'
-import { createAccount, updateAccount } from '@/actions/account.actions'
-import { useAccounts } from '@/hooks/swr/useAccounts'
+import { createAccount, updateAccount } from '@/server/actions/account.actions'
+import { useAccountList } from '@/swr/account'
 import { BooleanUtils } from '@/utils'
 import {
   AccountWithProfile,
   CreateAccountInput,
   UpdateAccountInput
-} from '@/schemas/account.schema'
+} from '@/server/schemas/account.schema'
 
 type ModalMode = 'create' | 'edit'
 
@@ -167,7 +167,8 @@ export default function AccountPage() {
           address: currentAccount.address || '',
           creditCode: currentAccount.creditCode || '',
           wechatID: currentAccount.wechatID || '',
-          remark: currentAccount.remark || ''
+          remark: currentAccount.remark || '',
+          domain: currentAccount.domain || ''
         }
       : {
           phone: '',
@@ -220,6 +221,7 @@ export default function AccountPage() {
         address: values.address,
         creditCode: values.creditCode,
         wechatID: values.wechatID,
+        domain: values.domain,
         remark: values.remark
       }
       const result = await createAccount(input)
@@ -227,6 +229,8 @@ export default function AccountPage() {
         await mutate()
         addToast({ color: 'success', title: '创建成功' })
         setIsModalOpen(false)
+      } else {
+        console.error('创建账户失败', result.error)
       }
     } else if (modalMode === 'edit' && currentAccount?.id) {
       const input: UpdateAccountInput = {
@@ -239,6 +243,8 @@ export default function AccountPage() {
         shopName: values.shopName,
         address: values.address,
         creditCode: values.creditCode,
+        wechatID: values.wechatID,
+        domain: values.domain,
         remark: values.remark
       }
       const result = await updateAccount(input)
@@ -248,12 +254,14 @@ export default function AccountPage() {
         if (updated) setCurrentAccount(updated)
         addToast({ color: 'success', title: '更新成功' })
         setIsModalOpen(false)
+      } else {
+        console.error('更新账户失败', result.error)
       }
     }
   }
 
   // 使用 SWR 获取数据
-  const { accounts, total, isLoading, mutate } = useAccounts({ keyword, page, pageSize: 10 })
+  const { accounts, total, isLoading, mutate } = useAccountList({ keyword, page, pageSize: 10 })
 
   const handleSearch = useCallback((keyword: string) => {
     console.log('搜索关键词:', keyword)

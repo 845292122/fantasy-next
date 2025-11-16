@@ -24,7 +24,7 @@ datasource db {
 
 model Account {
   id           Int       @id @default(autoincrement()) // 主键
-  email        String?   @unique @db.VarChar(100) // 邮箱
+  email        String?   @db.VarChar(100) // 邮箱
   phone        String?   @unique @db.VarChar(20) // 手机号
   passwordHash String?   @db.VarChar(1000) // 密码
   role         Int       @default(2) @db.TinyInt // 角色 1: 管理员 2: 普通用户

@@ -4,7 +4,7 @@ import { AcmeLogo } from '@/components/AppNavbar'
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex w-full h-screen bg-linear-to-b from-slate-50 via-blue-50 to-indigo-100">
-      <div className="w-1/2 p-12 flex justify-end items-center">
+      <div className="hidden lg:flex w-1/2 p-12 justify-end items-center">
         <div className="max-w-md flex flex-col">
           <header className="flex items-center mb-7">
             <AcmeLogo />
@@ -54,7 +54,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           </div>
         </div>
       </div>
-      <div className="w-1/2 flex items-center justify-start">{children}</div>
+      <div className="w-full lg:w-1/2 flex items-center justify-center lg:justify-start">
+        {children}
+      </div>
     </div>
   )
 }

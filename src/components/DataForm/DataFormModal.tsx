@@ -186,7 +186,7 @@ export default function DataFormModal({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside">
+    <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside" backdrop="blur">
       <ModalContent>
         {() => (
           <>

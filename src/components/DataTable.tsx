@@ -85,12 +85,20 @@ export default function DataTable<T extends Record<string, any>>({
     <div className="flex flex-col gap-4">
       <Table
         aria-label="数据表格"
+        removeWrapper
         selectionMode={finalSelectionMode}
         selectedKeys={selectedKeys}
         onSelectionChange={onSelectionChange}
         classNames={{
           wrapper: 'min-h-[400px]'
         }}
+        bottomContent={
+          pages > 1 && (
+            <div className="flex justify-center">
+              <Pagination isCompact showControls total={pages} page={page} onChange={setPage} />
+            </div>
+          )
+        }
       >
         <TableHeader columns={tableColumns}>
           {column => (
@@ -123,12 +131,6 @@ export default function DataTable<T extends Record<string, any>>({
           )}
         </TableBody>
       </Table>
-
-      {pages > 1 && (
-        <div className="flex justify-center">
-          <Pagination isCompact showControls total={pages} page={page} onChange={setPage} />
-        </div>
-      )}
     </div>
   )
 }

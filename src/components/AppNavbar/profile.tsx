@@ -35,7 +35,6 @@ export default function AppProfile() {
             avatarProps={{
               isBordered: true,
               radius: 'sm',
-              as: 'button',
               color: 'primary',
               size: 'sm',
               src: 'https://i.pravatar.cc/150?u=a042581f4e29026704d'

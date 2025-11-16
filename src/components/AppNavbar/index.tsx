@@ -1,7 +1,6 @@
 'use client'
 
 import { Navbar, NavbarBrand } from '@heroui/react'
-import React from 'react'
 import AppNavbarMenu from '@/components/AppNavbar/menu'
 import AppProfile from '@/components/AppNavbar/profile'
 

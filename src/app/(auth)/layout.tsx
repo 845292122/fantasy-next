@@ -1,24 +1,60 @@
-import Image from 'next/image'
+import { Building2, Users, Zap, Shield } from 'lucide-react'
+import { AcmeLogo } from '@/components/AppNavbar'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex w-full h-screen">
-      <div className="flex-1 bg-[#d3e3fe] flex flex-col py-14 pl-12 select-none">
-        <header className="flex items-center">
-          <Image src="/vercel.svg" alt="logo" width={22} height={22} />
-          <h1 className="font-bold text-xl ml-3">后台管理系统</h1>
-        </header>
-        <main className="flex-1 overflow-auto flex flex-col justify-center">
-          <h2 className="font-bold text-5xl">请登录</h2>
-          <span className="font-semibold text-xl mt-5 bg-linear-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            登录后，您将能够访问该应用程序的所有功能。
-          </span>
-        </main>
-        <footer className="border-gray-300 text-sm text-gray-700">
-          © 2025 Your Company. All rights reserved.
-        </footer>
+    <div className="flex w-full h-screen bg-linear-to-b from-slate-50 via-blue-50 to-indigo-100">
+      <div className="w-1/2 p-12 flex justify-end items-center">
+        <div className="max-w-md flex flex-col">
+          <header className="flex items-center mb-7">
+            <AcmeLogo />
+            <h1 className="font-bold text-xl">后台管理系统</h1>
+          </header>
+
+          <div className="space-y-8">
+            <div className="flex gap-4">
+              <Building2 className="w-6 h-6 text-blue-600 shrink-0" />
+              <div>
+                <h3 className="font-bold text-sm mb-2">多租户架构</h3>
+                <p className="text-gray-600 text-xs leading-relaxed">
+                  支持多个企业独立运营，数据完全隔离，每个租户拥有独立的管理空间和配置选项。
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <Users className="w-6 h-6 text-purple-600 shrink-0" />
+              <div>
+                <h3 className="font-bold text-sm mb-2">灵活的权限管理</h3>
+                <p className="text-gray-600 text-xs leading-relaxed">
+                  基于角色的访问控制，细粒度的权限配置，让团队协作更加高效安全。
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <Zap className="w-6 h-6 text-orange-600 shrink-0" />
+              <div>
+                <h3 className="font-bold text-sm mb-2">开箱即用</h3>
+                <p className="text-gray-600 text-xs leading-relaxed">
+                  快速部署，无需复杂配置，提供完善的 API 接口和文档，助力业务快速上线。
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <Shield className="w-6 h-6 text-green-600 shrink-0" />
+              <div>
+                <h3 className="font-bold text-sm mb-2">安全可靠</h3>
+                <p className="text-gray-600 text-xs leading-relaxed">
+                  企业级安全防护，数据加密存储，定期备份，确保您的业务数据万无一失。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="flex-1 bg-white flex items-center justify-center px-14">{children}</div>
+      <div className="w-1/2 flex items-center justify-start">{children}</div>
     </div>
   )
 }

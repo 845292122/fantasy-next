@@ -47,7 +47,7 @@ export default function LoginForm() {
         isInvalid={!!(formik.touched.password && formik.errors.password)}
         startContent={<Lock size={18} />}
       />
-      <div className="flex justify-end mt-7">
+      <div className="flex justify-end mt-5">
         <Link color="primary" className="cursor-pointer">
           忘记密码 ?
         </Link>

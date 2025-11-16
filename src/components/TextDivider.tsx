@@ -8,8 +8,8 @@ interface TextDividerProps {
 export default function TextDivider({
   text,
   className = 'my-4',
-  lineClassName = 'h-px flex-1 bg-default-200',
-  contentClassName = 'px-3 text-small text-default-500 bg-content1 rounded'
+  lineClassName = 'h-px flex-1 bg-default-300',
+  contentClassName = 'px-3 text-small text-default-500 rounded'
 }: TextDividerProps) {
   return (
     <div className={`flex items-center ${className}`}>

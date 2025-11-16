@@ -29,5 +29,5 @@ export type CreateAccountInput = yup.InferType<typeof createAccountSchema>
 export type UpdateAccountInput = yup.InferType<typeof updateAccountSchema>
 export type AccountWithProfile = Omit<CreateAccountInput, 'passwordHash'> & {
   id?: number
-  createdAt: Date
+  createdAt?: Date
 }

@@ -80,7 +80,8 @@ export default function AccountTable({ accounts, loading, onEdit, onDelete }: Ac
       key: 'createdAt',
       label: '创建时间',
       sortable: true,
-      render: item => format(new Date(item.createdAt), 'yyyy-MM-dd HH:mm:ss')
+      render: item =>
+        item.createdAt ? format(new Date(item.createdAt), 'yyyy-MM-dd HH:mm:ss') : '-'
     }
   ]
 

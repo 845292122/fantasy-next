@@ -230,7 +230,12 @@ export default function AccountPage() {
         addToast({ color: 'success', title: '创建成功' })
         setIsModalOpen(false)
       } else {
-        console.error('创建账户失败', result.error)
+        const errors = Array.isArray(result.error) ? result.error : [result.error]
+        addToast({
+          color: 'danger',
+          title: '创建账户失败',
+          description: errors.map(error => (error as any).message).join('; ')
+        })
       }
     } else if (modalMode === 'edit' && currentAccount?.id) {
       const input: UpdateAccountInput = {
@@ -255,7 +260,12 @@ export default function AccountPage() {
         addToast({ color: 'success', title: '更新成功' })
         setIsModalOpen(false)
       } else {
-        console.error('更新账户失败', result.error)
+        const errors = Array.isArray(result.error) ? result.error : [result.error]
+        addToast({
+          color: 'danger',
+          title: '创建账户失败',
+          description: errors.map(error => (error as any).message).join('; ')
+        })
       }
     }
   }

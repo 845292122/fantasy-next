@@ -15,7 +15,8 @@ import {
   RadioGroup,
   Checkbox,
   CheckboxGroup,
-  Switch
+  Switch,
+  addToast
 } from '@heroui/react'
 import { DataFormProps, FormField } from './types'
 import { useFormik } from 'formik'
@@ -46,9 +47,12 @@ export default function DataFormModal({
     onSubmit: async values => {
       try {
         await onSubmit(values)
-        onClose()
-      } catch (error) {
-        console.error('提交失败:', error)
+      } catch {
+        addToast({
+          color: 'danger',
+          title: '操作失败',
+          description: '请稍后重试'
+        })
       }
     }
   })

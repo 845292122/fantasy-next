@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
   User
 } from '@heroui/react'
-import { KeySquare, LogOut, SquarePen, Store, UserCog } from 'lucide-react'
+import { KeySquare, LogOut, SquarePen } from 'lucide-react'
 
 export default function AppProfile() {
   return (
@@ -68,21 +68,21 @@ export default function AppProfile() {
             <CardBody className="px-3 py-0">
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex gap-2">
-                  <p className="text-default-500 text-small w-12 text-right shrink-0">名 称</p>
+                  <p className="text-default-500 text-small w-10 shrink-0">名 称</p>
                   <p className="font-semibold text-default-600 text-small truncate">幻影旅团</p>
                 </div>
                 <div className="flex gap-2">
-                  <p className="text-default-500 text-small w-12 text-right shrink-0">联系人</p>
+                  <p className="text-default-500 text-small w-11 shrink-0">联系人</p>
                   <p className="font-semibold text-default-600 text-small truncate">库洛洛</p>
                 </div>
                 <div className="flex gap-2 col-span-2">
-                  <p className="text-default-500 text-small w-12 text-right shrink-0">邮 箱</p>
+                  <p className="text-default-500 text-small w-10 shrink-0">邮 箱</p>
                   <p className="font-semibold text-default-600 text-small truncate">
                     12312323@qq.com
                   </p>
                 </div>
                 <div className="flex gap-2 col-span-2">
-                  <p className="text-default-500 text-small w-12 text-right shrink-0">电 话</p>
+                  <p className="text-default-500 text-small w-10 shrink-0">电 话</p>
                   <p className="font-semibold text-default-600 text-small truncate">13212341234</p>
                 </div>
               </div>

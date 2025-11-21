@@ -43,7 +43,7 @@ export default function DataFormDrawer({
   })
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} placement={placement} size={size}>
+    <Drawer isOpen={isOpen} onClose={onClose} placement={placement} size={size} backdrop="blur">
       <DrawerContent>
         {() => (
           <>

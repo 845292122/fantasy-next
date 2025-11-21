@@ -47,7 +47,7 @@ const mockAccounts = [
   }
 ]
 
-// 验证规则
+// * 验证规则
 const validationSchema = Yup.object({
   phone: Yup.string()
     .required('手机号必填')
@@ -57,6 +57,11 @@ const validationSchema = Yup.object({
   email: Yup.string().email('邮箱格式不正确')
 })
 
+// TODO 查询
+// TODO 分页功能
+// TODO 后端业务校验
+// TODO 冻结账户
+// TODO 表格宽度、fixed配置
 export default function AccountPage() {
   const [modalMode, setModalMode] = useState<ModalMode>('create')
   const [isModalOpen, setIsModalOpen] = useState(false)

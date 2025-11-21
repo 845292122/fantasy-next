@@ -1,6 +1,6 @@
 # Next App
 
-## TODO
+## 主要功能
 
 - [x] 整合prisma+mysql
 - [ ] next-auth登录认证
@@ -13,3 +13,9 @@
 - [ ] middleware
 - [ ] 小程序接口
 - [ ] 部署
+
+## 业务TODO
+
+- [ ] 通知功能
+- [ ] 编辑profile
+- [ ] 账户crud

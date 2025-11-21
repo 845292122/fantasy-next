@@ -2,7 +2,7 @@
 
 import DataTable, { ColumnDef } from '@/components/DataTable'
 import { Button, Chip } from '@heroui/react'
-import { Edit, Trash2 } from 'lucide-react'
+import { Edit, UserCheck, UserX } from 'lucide-react'
 import { AccountWithProfile } from '@/server/schemas/account.schema'
 import { format } from 'date-fns'
 
@@ -10,10 +10,15 @@ interface AccountTableProps {
   accounts: AccountWithProfile[]
   loading?: boolean
   onEdit?: (account: AccountWithProfile) => void
-  onDelete?: (account: AccountWithProfile) => void
+  onChangeState?: (account: AccountWithProfile) => void
 }
 
-export default function AccountTable({ accounts, loading, onEdit, onDelete }: AccountTableProps) {
+export default function AccountTable({
+  accounts,
+  loading,
+  onEdit,
+  onChangeState
+}: AccountTableProps) {
   // const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]))
 
   // 定义列
@@ -95,10 +100,10 @@ export default function AccountTable({ accounts, loading, onEdit, onDelete }: Ac
         isIconOnly
         size="sm"
         variant="light"
-        color="danger"
-        onPress={() => handleDelete(item)}
+        color={item.isActive ? 'danger' : 'success'}
+        onPress={() => handleChangeState(item)}
       >
-        <Trash2 size={16} />
+        {item.isActive ? <UserX size={16} /> : <UserCheck size={16} />}
       </Button>
     </div>
   )
@@ -107,8 +112,8 @@ export default function AccountTable({ accounts, loading, onEdit, onDelete }: Ac
     onEdit?.(item)
   }
 
-  const handleDelete = (item: AccountWithProfile) => {
-    onDelete?.(item)
+  const handleChangeState = (account: AccountWithProfile) => {
+    onChangeState?.(account)
   }
 
   // const handleSelectionChange = (keys: Selection) => {

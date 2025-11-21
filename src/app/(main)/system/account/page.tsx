@@ -8,7 +8,12 @@ import SearchInput from '@/components/SearchInput'
 import DataFormModal from '@/components/DataForm/DataFormModal'
 import { FormField } from '@/components/DataForm'
 import * as Yup from 'yup'
-import { createAccount, updateAccount } from '@/server/actions/account.actions'
+import {
+  activateAccount,
+  createAccount,
+  freezeAccount,
+  updateAccount
+} from '@/server/actions/account.actions'
 import { useAccountList } from '@/swr/account'
 import { BooleanUtils } from '@/utils'
 import {
@@ -60,7 +65,6 @@ const validationSchema = Yup.object({
 // TODO 查询
 // TODO 分页功能
 // TODO 后端业务校验
-// TODO 冻结账户
 // TODO 表格宽度、fixed配置
 export default function AccountPage() {
   const [modalMode, setModalMode] = useState<ModalMode>('create')
@@ -232,13 +236,14 @@ export default function AccountPage() {
       const result = await createAccount(input)
       if (result.ok) {
         await mutate()
-        addToast({ color: 'success', title: '创建成功' })
+        addToast({ color: 'success', title: '创建成功', variant: 'solid' })
         setIsModalOpen(false)
       } else {
         const errors = Array.isArray(result.error) ? result.error : [result.error]
         addToast({
           color: 'danger',
           title: '创建账户失败',
+          variant: 'solid',
           description: errors.map(error => (error as any).message).join('; ')
         })
       }
@@ -262,16 +267,38 @@ export default function AccountPage() {
         await mutate()
         const updated = accounts.find(a => a.id === currentAccount.id)
         if (updated) setCurrentAccount(updated)
-        addToast({ color: 'success', title: '更新成功' })
+        addToast({ color: 'success', title: '更新成功', variant: 'solid' })
         setIsModalOpen(false)
       } else {
         const errors = Array.isArray(result.error) ? result.error : [result.error]
         addToast({
           color: 'danger',
           title: '创建账户失败',
+          variant: 'solid',
           description: errors.map(error => (error as any).message).join('; ')
         })
       }
+    }
+  }
+
+  const handleChangeState = async (account: AccountWithProfile) => {
+    try {
+      if (!account.id) throw new Error('无效的账户ID')
+      if (account.role === 1) {
+        addToast({ color: 'warning', title: '管理员账户不可冻结', variant: 'solid' })
+        return
+      }
+      if (account.isActive) {
+        await freezeAccount(account.id)
+      } else {
+        await activateAccount(account.id)
+      }
+      await mutate()
+      addToast({ color: 'success', title: '账户状态已更新', variant: 'solid' })
+    } catch (error) {
+      console.error('冻结账户失败:', error)
+      addToast({ color: 'danger', title: '冻结账户失败', variant: 'solid' })
+      return
     }
   }
 
@@ -305,7 +332,12 @@ export default function AccountPage() {
           </Button>
         </div>
       </div>
-      <AccountTable accounts={accounts} loading={isLoading} onEdit={openEdit} />
+      <AccountTable
+        accounts={accounts}
+        loading={isLoading}
+        onEdit={openEdit}
+        onChangeState={handleChangeState}
+      />
       <DataFormModal
         key={`${modalMode}-${isModalOpen}-${currentAccount?.id || 'new'}`}
         isOpen={isModalOpen}

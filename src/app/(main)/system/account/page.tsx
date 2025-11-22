@@ -307,14 +307,8 @@ export default function AccountPage() {
   const { accounts, total, isLoading, mutate } = useAccountList({ keyword, page, pageSize: 10 })
 
   const handleSearch = useCallback((keyword: string) => {
-    console.log('搜索关键词:', keyword)
-    // TODO: 调用后台 API 查询
-    setTimeout(() => {
-      // 模拟搜索
-      const filtered = mockAccounts.filter(
-        account => account.username.includes(keyword) || account.email.includes(keyword)
-      )
-    }, 500)
+    setKeyword(keyword)
+    setPage(1)
   }, [])
 
   return (
@@ -340,6 +334,7 @@ export default function AccountPage() {
         onChangeState={handleChangeState}
         total={total}
         onPageChange={setPage}
+        page={page}
       />
       <DataFormModal
         key={`${modalMode}-${isModalOpen}-${currentAccount?.id || 'new'}`}

@@ -8,7 +8,8 @@ import {
   TableRow,
   TableCell,
   Pagination,
-  Selection
+  Selection,
+  Spinner
 } from '@heroui/react'
 import { ReactNode, useMemo } from 'react'
 
@@ -33,6 +34,7 @@ interface DataTableProps<T = any> {
   loading?: boolean
   total?: number
   onPageChange?: (page: number) => void
+  page?: number
 }
 
 export default function DataTable<T extends Record<string, any>>({
@@ -47,7 +49,8 @@ export default function DataTable<T extends Record<string, any>>({
   emptyContent = '暂无数据',
   loading = false,
   total = 0,
-  onPageChange
+  onPageChange,
+  page = 1
 }: DataTableProps<T>) {
   // 总页数
   const pages = Math.ceil(total / pageSize)
@@ -94,6 +97,7 @@ export default function DataTable<T extends Record<string, any>>({
                 isCompact
                 showControls
                 total={pages}
+                page={page}
                 onChange={onPageChange}
                 className="cursor-pointer"
               />
@@ -108,7 +112,12 @@ export default function DataTable<T extends Record<string, any>>({
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={data} emptyContent={emptyContent} isLoading={loading}>
+        <TableBody
+          items={data}
+          emptyContent={emptyContent}
+          isLoading={loading}
+          loadingContent={<Spinner label="加载中..." variant="wave" />}
+        >
           {item => (
             <TableRow key={item[rowKey]}>
               {columnKey => {

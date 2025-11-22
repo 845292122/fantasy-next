@@ -10,7 +10,7 @@ import {
   Pagination,
   Selection
 } from '@heroui/react'
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useMemo } from 'react'
 
 export interface ColumnDef<T = any> {
   key: string
@@ -31,6 +31,8 @@ interface DataTableProps<T = any> {
   selectedKeys?: Selection
   emptyContent?: string
   loading?: boolean
+  total?: number
+  onPageChange?: (page: number) => void
 }
 
 export default function DataTable<T extends Record<string, any>>({
@@ -43,19 +45,12 @@ export default function DataTable<T extends Record<string, any>>({
   onSelectionChange,
   selectedKeys,
   emptyContent = '暂无数据',
-  loading = false
+  loading = false,
+  total = 0,
+  onPageChange
 }: DataTableProps<T>) {
-  const [page, setPage] = useState(1)
-
-  // 分页数据
-  const paginatedData = useMemo(() => {
-    const start = (page - 1) * pageSize
-    const end = start + pageSize
-    return data.slice(start, end)
-  }, [data, page, pageSize])
-
   // 总页数
-  const pages = Math.ceil(data.length / pageSize)
+  const pages = Math.ceil(total / pageSize)
 
   // 自动判断是否显示多选框
   const finalSelectionMode = useMemo(() => {
@@ -95,7 +90,13 @@ export default function DataTable<T extends Record<string, any>>({
         bottomContent={
           pages > 1 && (
             <div className="flex justify-center">
-              <Pagination isCompact showControls total={pages} page={page} onChange={setPage} />
+              <Pagination
+                isCompact
+                showControls
+                total={pages}
+                onChange={onPageChange}
+                className="cursor-pointer"
+              />
             </div>
           )
         }
@@ -107,7 +108,7 @@ export default function DataTable<T extends Record<string, any>>({
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={paginatedData} emptyContent={emptyContent} isLoading={loading}>
+        <TableBody items={data} emptyContent={emptyContent} isLoading={loading}>
           {item => (
             <TableRow key={item[rowKey]}>
               {columnKey => {

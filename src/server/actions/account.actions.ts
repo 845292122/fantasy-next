@@ -170,6 +170,8 @@ export async function createAccount(raw: CreateAccountInput) {
         path: issue.path,
         message: issue.message
       }))
+    } else {
+      error = '创建账户失败'
     }
     return { ok: false, error }
   }

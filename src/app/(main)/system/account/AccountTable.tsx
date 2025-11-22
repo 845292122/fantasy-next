@@ -11,13 +11,17 @@ interface AccountTableProps {
   loading?: boolean
   onEdit?: (account: AccountWithProfile) => void
   onChangeState?: (account: AccountWithProfile) => void
+  total?: number
+  onPageChange?: (page: number) => void
 }
 
 export default function AccountTable({
   accounts,
   loading,
   onEdit,
-  onChangeState
+  onChangeState,
+  total = 0,
+  onPageChange
 }: AccountTableProps) {
   // const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]))
 
@@ -131,6 +135,8 @@ export default function AccountTable({
       selectionMode="multiple"
       loading={loading}
       emptyContent="暂无账号数据"
+      total={total}
+      onPageChange={onPageChange}
     />
   )
 }

@@ -63,7 +63,6 @@ const validationSchema = Yup.object({
 })
 
 // TODO 查询
-// TODO 分页功能
 // TODO 后端业务校验
 // TODO 表格宽度、fixed配置
 export default function AccountPage() {
@@ -121,13 +120,15 @@ export default function AccountPage() {
       name: 'contact',
       label: '联系人',
       type: 'text',
-      placeholder: '请输入联系人'
+      placeholder: '请输入联系人',
+      required: true
     },
     {
       name: 'shopName',
       label: '店铺名称',
       type: 'text',
-      placeholder: '请输入店铺名称'
+      placeholder: '请输入店铺名称',
+      required: true
     },
     {
       name: 'address',
@@ -337,6 +338,8 @@ export default function AccountPage() {
         loading={isLoading}
         onEdit={openEdit}
         onChangeState={handleChangeState}
+        total={total}
+        onPageChange={setPage}
       />
       <DataFormModal
         key={`${modalMode}-${isModalOpen}-${currentAccount?.id || 'new'}`}

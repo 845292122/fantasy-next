@@ -24,34 +24,6 @@ import {
 
 type ModalMode = 'create' | 'edit'
 
-// 模拟数据
-const mockAccounts = [
-  {
-    id: 1,
-    username: 'admin',
-    email: 'admin@example.com',
-    role: '管理员',
-    status: 'active' as const,
-    createdAt: '2024-01-01 10:00:00'
-  },
-  {
-    id: 2,
-    username: 'user1',
-    email: 'user1@example.com',
-    role: '普通用户',
-    status: 'active' as const,
-    createdAt: '2024-01-02 14:30:00'
-  },
-  {
-    id: 3,
-    username: 'user2',
-    email: 'user2@example.com',
-    role: '普通用户',
-    status: 'inactive' as const,
-    createdAt: '2024-01-03 09:15:00'
-  }
-]
-
 // * 验证规则
 const validationSchema = Yup.object({
   phone: Yup.string()
@@ -62,7 +34,6 @@ const validationSchema = Yup.object({
   email: Yup.string().email('邮箱格式不正确')
 })
 
-// TODO 查询
 // TODO 后端业务校验
 // TODO 表格宽度、fixed配置
 export default function AccountPage() {

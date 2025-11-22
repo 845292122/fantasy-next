@@ -5,6 +5,7 @@ import { Button, Chip } from '@heroui/react'
 import { Edit, UserCheck, UserX } from 'lucide-react'
 import { AccountWithProfile } from '@/server/schemas/account.schema'
 import { format } from 'date-fns'
+import { useThrottle } from '@/hooks'
 
 interface AccountTableProps {
   accounts: AccountWithProfile[]
@@ -26,6 +27,11 @@ export default function AccountTable({
   page = 1
 }: AccountTableProps) {
   // const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]))
+
+  // 使用节流 hook
+  const throttledChangeState = useThrottle((account: AccountWithProfile) => {
+    onChangeState?.(account)
+  }, 1000)
 
   // 定义列
   const columns: ColumnDef<AccountWithProfile>[] = [
@@ -119,7 +125,7 @@ export default function AccountTable({
   }
 
   const handleChangeState = (account: AccountWithProfile) => {
-    onChangeState?.(account)
+    throttledChangeState(account)
   }
 
   // const handleSelectionChange = (keys: Selection) => {

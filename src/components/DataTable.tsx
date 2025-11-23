@@ -19,6 +19,7 @@ export interface ColumnDef<T = any> {
   sortable?: boolean
   render?: (item: T) => ReactNode
   align?: 'start' | 'center' | 'end'
+  width?: number
 }
 
 interface DataTableProps<T = any> {
@@ -107,7 +108,12 @@ export default function DataTable<T extends Record<string, any>>({
       >
         <TableHeader columns={tableColumns}>
           {column => (
-            <TableColumn key={column.key} align={column.align} allowsSorting={column.sortable}>
+            <TableColumn
+              key={column.key}
+              align={column.align}
+              allowsSorting={column.sortable}
+              width={column.width}
+            >
               {column.label}
             </TableColumn>
           )}

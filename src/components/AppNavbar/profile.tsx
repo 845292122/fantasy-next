@@ -97,7 +97,7 @@ export default function AppProfile() {
                   编辑信息
                 </Button>
                 <Button
-                  variant="ghost"
+                  variant="solid"
                   startContent={<KeySquare size={12} strokeWidth={3} />}
                   size="sm"
                   fullWidth

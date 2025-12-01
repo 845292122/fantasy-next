@@ -1,11 +1,11 @@
 'use client'
 
-import DataTable, { ColumnDef } from '@/components/DataTable'
+import DataTable, { ColumnDef } from '@/client/components/DataTable'
 import { Button, Chip } from '@heroui/react'
 import { Edit, UserCheck, UserX } from 'lucide-react'
 import { AccountWithProfile } from '@/server/schemas/account.schema'
 import { format } from 'date-fns'
-import { useThrottle } from '@/hooks'
+import { useThrottle } from '@/client/hooks'
 
 interface AccountTableProps {
   accounts: AccountWithProfile[]

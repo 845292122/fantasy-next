@@ -1,6 +1,6 @@
 'use client'
 
-import TextDivider from '@/components/TextDivider'
+import TextDivider from '@/client/components/TextDivider'
 import { Button, Checkbox, Input, Link } from '@heroui/react'
 import { useFormik } from 'formik'
 import { Fingerprint, Lock, Phone } from 'lucide-react'

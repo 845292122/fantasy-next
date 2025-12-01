@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { Button } from '@heroui/react'
-import { FormField } from '@/components/DataForm'
-import DataFormDrawer from '@/components/DataForm/DataFormDrawer'
-import DataFormModal from '@/components/DataForm/DataFormModal'
+import { FormField } from '@/client/components/DataForm'
+import DataFormDrawer from '@/client/components/DataForm/DataFormDrawer'
+import DataFormModal from '@/client/components/DataForm/DataFormModal'
 import * as Yup from 'yup'
 
 export default function FormExample() {

@@ -1,5 +1,5 @@
 import { Building2, Users, Zap, Shield } from 'lucide-react'
-import { AcmeLogo } from '@/components/AppNavbar'
+import { AcmeLogo } from '@/client/components/AppNavbar'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (

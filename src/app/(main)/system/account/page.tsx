@@ -4,9 +4,9 @@ import { addToast, Button } from '@heroui/react'
 import { Plus } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import AccountTable from './AccountTable'
-import SearchInput from '@/components/SearchInput'
-import DataFormModal from '@/components/DataForm/DataFormModal'
-import { FormField } from '@/components/DataForm'
+import SearchInput from '@/client/components/SearchInput'
+import DataFormModal from '@/client/components/DataForm/DataFormModal'
+import { FormField } from '@/client/components/DataForm'
 import * as Yup from 'yup'
 import {
   activateAccount,
@@ -14,7 +14,7 @@ import {
   freezeAccount,
   updateAccount
 } from '@/server/actions/account.actions'
-import { useAccountList } from '@/swr/account'
+import { useAccountList } from '@/client/swr/account'
 import { BooleanUtils } from '@/utils'
 import {
   AccountWithProfile,

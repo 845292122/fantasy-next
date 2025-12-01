@@ -1,6 +1,6 @@
 'use client'
 
-import AppNavbar from '@/components/AppNavbar'
+import AppNavbar from '@/client/components/AppNavbar'
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (

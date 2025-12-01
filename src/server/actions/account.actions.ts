@@ -9,7 +9,7 @@ import {
   updateAccountSchema
 } from '@/server/schemas/account.schema'
 import * as yup from 'yup'
-import { Prisma } from '@/generated/prisma/client'
+import { Prisma } from '../../../generated/prisma/client'
 
 /**
  * 获取账户列表

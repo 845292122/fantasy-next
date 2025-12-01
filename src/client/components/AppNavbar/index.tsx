@@ -1,8 +1,8 @@
 'use client'
 
 import { Navbar, NavbarBrand } from '@heroui/react'
-import AppNavbarMenu from '@/components/AppNavbar/menu'
-import AppProfile from '@/components/AppNavbar/profile'
+import AppNavbarMenu from '@/client/components/AppNavbar/menu'
+import AppProfile from '@/client/components/AppNavbar/profile'
 
 export const AcmeLogo = () => {
   return (
